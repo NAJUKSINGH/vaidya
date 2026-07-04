@@ -1,20 +1,34 @@
-import {DataAPIClient} from  "@datastax/astra-db-ts";
-
-import {puppeteerWebBaseLoader} from "langchain/document_loaders/web/puppeteer";
-
-import {recursiveCharacterTextSplitter} from "langchain/text_splitter";
-
-import { GoogleGenAI } from "@google/genai";
-
 import "dotenv/config";
 
-const { ASTRA_DB_NAMESPACE, ASTRA_DB_COLLECTION, ASTRA_DB_API_ENDPOINT, ASTRA_DB_APPLICATION_TOKEN, GEMINI_API_KEY } = process.env;
+import { createCollection } from "../lib/astra";
+import { loadData } from "../lib/rag";
+const companyUrls = [
+    "https://patanjaliwellness.com/panchakarma.php",
+    "LOCAL_PDF:data/ayurveda.pdf",
+    "LOCAL_PDF:data/Ayurvedic-Home-Remedies-English.pdf",
+    "https://ayurveda.com/resources/what-is-ayurveda/",
+    "https://ayurveda.com/resources/ayurveda-doshas-guide/",
+    "https://ayurveda.com/resources/what-is-vata-dosha/",
+    "https://ayurveda.com/resources/what-is-pitta-dosha/",
+    "https://ayurveda.com/resources/what-is-kapha-dosha/",
+    "https://ayurveda.com/resources/what-is-Prakriti/",
+    "https://ayurveda.com/resources/what-is-Vikruti/",
+    "https://ayurveda.com/resources/ayurvedic-diet-guide/",
+    "https://ayurveda.com/food-guidelines/",
+    "https://ayurveda.com/resources/what-is-marma-therapy/",
+    "https://ayurveda.com/resources/ayurvedic-pulse-reading-guide/",
+    "https://www.webmd.com/balance/ss/slideshow-home-remedies"
+];
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+async function main() {
+    try {
+        await createCollection();
+        await loadData(companyUrls);
 
-const f1Data = [
+        console.log("Data loading complete.");
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-]
-
-const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN)
-const db = client.db(ASTRA_DB_API_ENDPOINT, { namespace: ASTRA_DB_NAMESPACE});
+main();
