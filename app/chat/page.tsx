@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+export const dynamic = "force-dynamic";
 
 type Message = {
     role: "user" | "assistant";
